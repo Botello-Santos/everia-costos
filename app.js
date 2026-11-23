@@ -9,9 +9,9 @@ const quita=(g,i)=>`<td><button class="x" data-del="${g}" data-i="${i}" aria-lab
 function form(){
  $('#fProd').innerHTML=campo('nombre','Nombre')+campo('pres','Presentación')+campo('lote','Frascos por lote',1,1);
  $('#fPre').innerHTML=campo('rent','Rentabilidad sobre costo (%)')+campo('iva','IVA (%)')+campo('op','Gastos de operación por pieza ($)')+campo('prop','Precio propuesto con IVA ($)');
- $('#tMP').innerHTML='<thead><tr><th>Concepto<th>Usa por lote<th>Unidad<th>Precio de compra<th>Cantidad comprada<th>Costo<th></tr></thead><tbody>'+D.mp.map((x,i)=>'<tr>'+cel('mp',i,'n','Concepto')+cel('mp',i,'c','Consumo')+cel('mp',i,'u','Unidad')+cel('mp',i,'p','Precio')+cel('mp',i,'q','Cantidad comprada')+`<td class="n" data-t="mp${i}"></td>`+quita('mp',i)+'</tr>').join('');
- $('#tMO').innerHTML='<thead><tr><th>Actividad<th>Horas por lote<th>Tarifa por hora<th>Costo<th></tr></thead><tbody>'+D.mo.map((x,i)=>'<tr>'+cel('mo',i,'n','Actividad')+cel('mo',i,'h','Horas')+cel('mo',i,'t','Tarifa')+`<td class="n" data-t="mo${i}"></td>`+quita('mo',i)+'</tr>').join('');
- $('#tGIF').innerHTML='<thead><tr><th>Concepto<th>Importe por lote<th></tr></thead><tbody>'+D.gif.map((x,i)=>'<tr>'+cel('gif',i,'n','Concepto')+cel('gif',i,'m','Importe')+quita('gif',i)+'</tr>').join('');pinta();}
+ $('#tMP').innerHTML='<thead><tr><th>Concepto<th>Usa por lote<th>Unidad<th>Precio de compra<th>Cantidad comprada<th>Costo<th>Quitar</tr></thead><tbody>'+D.mp.map((x,i)=>'<tr>'+cel('mp',i,'n','Concepto')+cel('mp',i,'c','Consumo')+cel('mp',i,'u','Unidad')+cel('mp',i,'p','Precio')+cel('mp',i,'q','Cantidad comprada')+`<td class="n" data-t="mp${i}"></td>`+quita('mp',i)+'</tr>').join('');
+ $('#tMO').innerHTML='<thead><tr><th>Actividad<th>Horas por lote<th>Tarifa por hora<th>Costo<th>Quitar</tr></thead><tbody>'+D.mo.map((x,i)=>'<tr>'+cel('mo',i,'n','Actividad')+cel('mo',i,'h','Horas')+cel('mo',i,'t','Tarifa')+`<td class="n" data-t="mo${i}"></td>`+quita('mo',i)+'</tr>').join('');
+ $('#tGIF').innerHTML='<thead><tr><th>Concepto<th>Importe por lote<th>Quitar</tr></thead><tbody>'+D.gif.map((x,i)=>'<tr>'+cel('gif',i,'n','Concepto')+cel('gif',i,'m','Importe')+quita('gif',i)+'</tr>').join('');pinta();}
 const lin=(a,b,c='')=>`<div class="lin ${c}"><span>${a}</span><b>${b}</b></div>`;
 function pinta(){const k=calcular(D);
  D.mp.forEach((x,i)=>$(`[data-t=mp${i}]`).textContent=P(x.q>0?x.c*x.p/x.q:0));D.mo.forEach((x,i)=>$(`[data-t=mo${i}]`).textContent=P(x.h*x.t));

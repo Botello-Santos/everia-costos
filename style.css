@@ -20,3 +20,4 @@ body.contraste{--fondo:#000;--papel:#000;--tinta:#fff;--verde:#ffe14d;--suave:#2
 body.lectura,body.lectura h1,body.lectura h2,body.lectura legend{font-family:Verdana,Tahoma,sans-serif;letter-spacing:.04em;word-spacing:.12em;line-height:1.8}body.enlaces a{text-decoration:underline!important;text-decoration-thickness:2px!important;background:#ffec8a;color:#111!important}body.grande button,body.grande .boton,body.grande input,body.grande select{padding:.85rem 1.2rem}
 @media(max-width:900px){.heroe,.dos,.tres{grid-template-columns:minmax(0,1fr)}.res{position:static}.cifras{grid-template-columns:1fr 1fr}.pasos{grid-template-columns:repeat(2,1fr)}.heroe h1{font-size:2.2rem}nav{margin:0}#panelAcc{left:4vw;right:4vw;width:auto}}
 @media print{header,footer,#panelAcc,button,.boton,nav{display:none!important}body{background:#fff}}
+.campos label{display:flex;flex-direction:column;justify-content:flex-end}
