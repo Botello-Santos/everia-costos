@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es-MX"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EVERIA Costos · Control de costos e inventario</title>
+<meta name="description" content="Aplicación para calcular el costo unitario, los precios y el inventario del exfoliante natural EVERIA.">
+<link rel="icon" href="img/logo.webp"><link rel="stylesheet" href="style.css"></head><body>
+<a class="salto" href="#contenido">Saltar al contenido</a>
+<header><a class="marca" href="#inicio"><img src="img/logo.webp" alt="" width="52" height="52"><span><b>EVERIA</b> Costos</span></a>
+<nav aria-label="Principal"><a href="#inicio">Inicio</a><a href="#costos">Costos</a><a href="#precios">Precios</a><a href="#inventario">Inventario</a><a href="#prueba">Prueba de uso</a></nav>
+<button id="abrirAcc" aria-expanded="false" aria-controls="panelAcc">Accesibilidad</button></header>
+<aside id="panelAcc" hidden aria-label="Opciones de accesibilidad">
+<h2>Accesibilidad</h2>
+<div class="fila"><button data-acc="menos" aria-label="Reducir texto">A−</button><button data-acc="mas" aria-label="Aumentar texto">A+</button></div>
+<button data-acc="contraste" aria-pressed="false">Alto contraste</button>
+<button data-acc="lectura" aria-pressed="false">Letra más legible</button>
+<button data-acc="enlaces" aria-pressed="false">Resaltar enlaces</button>
+<button data-acc="grande" aria-pressed="false">Botones grandes</button>
+<button data-acc="voz">Leer esta pantalla en voz alta</button>
+<button data-acc="limpiar">Restablecer</button>
+<p>Con teclado: <kbd>Tab</kbd> avanza, <kbd>Enter</kbd> activa y <kbd>Esc</kbd> cierra este panel.</p></aside>
+<main id="contenido" tabindex="-1">
+<section id="inicio" class="vista">
+ <div class="heroe"><div><h1>Exfoliante natural EVERIA</h1><p class="lema">Naturaleza que inspira tu cuidado.</p>
+ <p>Arroz molido, miel de abeja, aceite de coco y té de Jamaica sobre una base de jabón corporal. Esta aplicación calcula cuánto cuesta cada frasco, a qué precio conviene venderlo y cuánto queda en existencia.</p>
+ <p><a class="boton" href="#costos">Calcular el costo</a> <a class="boton claro" href="#inventario">Ver inventario</a></p></div>
+ <img src="img/prototipo.webp" alt="Dos envases del exfoliante EVERIA, uno de frente y otro por la parte posterior de la etiqueta" width="1298" height="865"></div>
+ <div class="cifras" id="resumen" aria-live="polite"></div>
+ <h2>Cómo se elabora</h2><div class="pasos">
+ <figure><img src="img/p1-ingredientes.webp" alt="Ingredientes sobre una mesa"><figcaption>Se pesan los ingredientes</figcaption></figure>
+ <figure><img src="img/p2-molienda.webp" alt="Arroz pulverizado en una licuadora"><figcaption>Se muele el arroz</figcaption></figure>
+ <figure><img src="img/p3-miel.webp" alt="Miel vertida sobre la mezcla"><figcaption>Se agrega la miel</figcaption></figure>
+ <figure><img src="img/p4-jamaica.webp" alt="Flor de Jamaica en remojo"><figcaption>Se remoja la Jamaica</figcaption></figure>
+ <figure><img src="img/p6-mezcla.webp" alt="Mezcla final de color rosado"><figcaption>Se mezcla todo</figcaption></figure>
+ <figure><img src="img/p7-listo.webp" alt="Frasco de exfoliante terminado"><figcaption>Producto listo</figcaption></figure></div>
+</section>
+<section id="costos" class="vista"><h1>Costo de producción</h1><p>Escribe cantidades, precios y características del lote. El resultado cambia al momento.</p>
+ <div class="dos"><div>
+ <fieldset><legend>Producto</legend><div class="campos" id="fProd"></div></fieldset>
+ <fieldset><legend>1. Materia prima directa</legend><div class="desliza"><table id="tMP"></table></div><button data-add="mp">Agregar materia prima</button></fieldset>
+ <fieldset><legend>2. Mano de obra directa</legend><div class="desliza"><table id="tMO"></table></div><button data-add="mo">Agregar mano de obra</button></fieldset>
+ <fieldset><legend>3. Gastos indirectos de fabricación</legend><div class="desliza"><table id="tGIF"></table></div><button data-add="gif">Agregar gasto indirecto</button></fieldset>
+ </div><aside class="res" id="resCosto" aria-live="polite" aria-label="Resultado"></aside></div>
+ <p class="acciones"><button id="csv">Descargar hoja de costos (CSV)</button> <button id="imprimir">Imprimir</button> <button id="reset" class="claro">Volver a los datos de ejemplo</button></p>
+</section>
+<section id="precios" class="vista"><h1>Precio de venta</h1><p>El precio parte del costo unitario, más los gastos de operación por pieza y la rentabilidad que elijas.</p>
+ <div class="dos"><fieldset><legend>Condiciones</legend><div class="campos" id="fPre"></div></fieldset><aside class="res" id="resPre" aria-live="polite" aria-label="Precios"></aside></div>
+ <h2>Comparación con el precio propuesto</h2><div id="compara"></div></section>
+<section id="inventario" class="vista"><h1>Control de inventarios</h1><p>Las compras suman materia prima, la producción la consume y crea frascos, y la venta los descuenta. Se usa costo promedio.</p>
+ <div class="tres">
+ <form id="fCompra"><fieldset><legend>Registrar compra</legend><label>Materia prima<select name="i"></select></label><label>Cantidad<input name="c" type="number" min="0.01" step="any" required></label><label>Costo total de la compra ($)<input name="t" type="number" min="0" step="any" required></label><button>Guardar compra</button></fieldset></form>
+ <form id="fProdu"><fieldset><legend>Registrar producción</legend><label>Número de lotes<input name="n" type="number" min="1" step="1" value="1" required></label><p class="nota" id="notaProd"></p><button>Producir</button></fieldset></form>
+ <form id="fVenta"><fieldset><legend>Registrar venta</legend><label>Frascos vendidos<input name="n" type="number" min="1" step="1" value="1" required></label><p class="nota" id="notaVenta"></p><button>Vender</button></fieldset></form></div>
+ <p id="aviso" role="status"></p><h2>Existencias</h2><div class="desliza"><table id="tInv"></table></div>
+ <h2>Movimientos del producto terminado</h2><div class="desliza"><table id="tKar"></table></div>
+ <p class="acciones"><button id="csvInv">Descargar movimientos (CSV)</button> <button id="limpInv" class="claro">Vaciar inventario</button></p></section>
+<section id="prueba" class="vista"><h1>Prueba de uso</h1><p>Sigue las tareas, responde y genera tu comprobante. Los datos se quedan en este dispositivo: no se envían a ningún servidor.</p>
+ <form id="fPru"><fieldset><legend>Quién prueba la aplicación</legend><div class="campos"><label>Nombre<input name="nombre" required autocomplete="off"></label><label>Carrera<input name="carrera" value="Ing. Industrial" required></label><label>Semestre y grupo<input name="grupo" autocomplete="off"></label></div></fieldset>
+ <fieldset><legend>Tareas</legend><label class="chk"><input type="checkbox" name="t1" required> Cambié un precio o una cantidad en Costos y vi el nuevo costo unitario.</label><label class="chk"><input type="checkbox" name="t2" required> Cambié la rentabilidad en Precios y revisé el precio sin IVA y con IVA.</label><label class="chk"><input type="checkbox" name="t3" required> Registré una compra, una producción y una venta en Inventario.</label></fieldset>
+ <fieldset><legend>Opinión</legend><div class="campos"><label>Facilidad de uso (1 a 5)<input name="fac" type="number" min="1" max="5" required></label><label>Claridad de los resultados (1 a 5)<input name="cla" type="number" min="1" max="5" required></label></div><label>Comentario<textarea name="com" rows="3"></textarea></label></fieldset>
+ <button>Generar comprobante</button></form><div id="comp"></div></section>
+</main><footer>EVERIA · Proyecto escolar de Costos Empresariales, ITSPR. Los datos se guardan solo en tu navegador.</footer>
+<script src="calc.js"></script><script src="app.js"></script></body></html>
