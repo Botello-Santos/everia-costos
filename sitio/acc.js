@@ -3,8 +3,8 @@
   const K = 'everia-acc'; let a = { z: 100, c: [] };
   try { a = { ...a, ...JSON.parse(localStorage.getItem(K)) }; } catch { /* valores iniciales */ }
   const css = document.createElement('style');
-  css.textContent = `#acc-b{position:fixed;right:14px;bottom:14px;z-index:99998;min-height:44px;padding:.5rem .9rem;border:2px solid #fff;border-radius:8px;background:#48552f;color:#fff;font:600 15px system-ui;cursor:pointer;box-shadow:0 2px 10px #0005}
-#acc-p{position:fixed;right:14px;bottom:70px;z-index:99999;width:270px;max-height:75vh;overflow:auto;background:#fffdf8;color:#222;border:1px solid #777;border-radius:10px;padding:14px;display:grid;gap:8px;font:15px/1.4 system-ui;box-shadow:0 8px 30px #0005}#acc-p[hidden]{display:none}
+  css.textContent = `#acc-b{position:fixed;right:0;top:42%;writing-mode:vertical-rl;z-index:99998;min-height:44px;padding:.5rem .9rem;border:2px solid #fff;border-radius:8px 0 0 8px;background:#48552f;color:#fff;font:600 15px system-ui;cursor:pointer;box-shadow:0 2px 10px #0005}
+#acc-p{position:fixed;right:64px;bottom:14px;z-index:99999;width:270px;max-height:75vh;overflow:auto;background:#fffdf8;color:#222;border:1px solid #777;border-radius:10px;padding:14px;display:grid;gap:8px;font:15px/1.4 system-ui;box-shadow:0 8px 30px #0005}#acc-p[hidden]{display:none}
 #acc-p h2{font:600 18px system-ui;margin:0;color:#222}#acc-p button{font:inherit;min-height:42px;border:1px solid #48552f;border-radius:7px;background:#fff;color:#222;cursor:pointer}#acc-p button[aria-pressed=true]{background:#48552f;color:#fff}#acc-p div{display:flex;gap:8px}#acc-p div button{flex:1}#acc-p p{margin:0;font-size:13px}
 #acc-b:focus-visible,#acc-p button:focus-visible{outline:3px solid #1a5fb4;outline-offset:2px}
 html.acc-contraste body,html.acc-contraste body *:not(img):not(canvas):not(svg):not(svg *):not(option){background-color:#000!important;color:#fff!important;border-color:#fff!important;text-shadow:none!important;box-shadow:none!important;background-image:none!important}
