@@ -1,61 +1,252 @@
-<!doctype html>
-<html lang="es-MX"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>EVERIA Costos · Control de costos e inventario</title>
-<meta name="description" content="Aplicación para calcular el costo unitario, los precios y el inventario del exfoliante natural EVERIA.">
-<link rel="icon" href="img/logo.webp"><link rel="stylesheet" href="style.css"></head><body>
-<a class="salto" href="#contenido">Saltar al contenido</a>
-<header><a class="marca" href="#inicio"><img src="img/logo.webp" alt="" width="52" height="52"><span><b>EVERIA</b> Costos</span></a>
-<nav aria-label="Principal"><a href="#inicio">Inicio</a><a href="#costos">Costos</a><a href="#precios">Precios</a><a href="#inventario">Inventario</a><a href="#prueba">Prueba de uso</a></nav>
-<button id="abrirAcc" aria-expanded="false" aria-controls="panelAcc">Accesibilidad</button></header>
-<aside id="panelAcc" hidden aria-label="Opciones de accesibilidad">
-<h2>Accesibilidad</h2>
-<div class="fila"><button data-acc="menos" aria-label="Reducir texto">A−</button><button data-acc="mas" aria-label="Aumentar texto">A+</button></div>
-<button data-acc="contraste" aria-pressed="false">Alto contraste</button>
-<button data-acc="lectura" aria-pressed="false">Letra más legible</button>
-<button data-acc="enlaces" aria-pressed="false">Resaltar enlaces</button>
-<button data-acc="grande" aria-pressed="false">Botones grandes</button>
-<button data-acc="voz">Leer esta pantalla en voz alta</button>
-<button data-acc="limpiar">Restablecer</button>
-<p>Con teclado: <kbd>Tab</kbd> avanza, <kbd>Enter</kbd> activa y <kbd>Esc</kbd> cierra este panel.</p></aside>
-<main id="contenido" tabindex="-1">
-<section id="inicio" class="vista">
- <div class="heroe"><div><h1>Exfoliante natural EVERIA</h1><p class="lema">Naturaleza que inspira tu cuidado.</p>
- <p>Arroz molido, miel de abeja, aceite de coco y té de Jamaica sobre una base de jabón corporal. Esta aplicación calcula cuánto cuesta cada frasco, a qué precio conviene venderlo y cuánto queda en existencia.</p>
- <p><a class="boton" href="#costos">Calcular el costo</a> <a class="boton claro" href="#inventario">Ver inventario</a></p></div>
- <img src="img/prototipo.webp" alt="Dos envases del exfoliante EVERIA, uno de frente y otro por la parte posterior de la etiqueta" width="1298" height="865"></div>
- <div class="cifras" id="resumen" aria-live="polite"></div>
- <h2>Cómo se elabora</h2><div class="pasos">
- <figure><img src="img/p1-ingredientes.webp" alt="Ingredientes sobre una mesa"><figcaption>Se pesan los ingredientes</figcaption></figure>
- <figure><img src="img/p2-molienda.webp" alt="Arroz pulverizado en una licuadora"><figcaption>Se muele el arroz</figcaption></figure>
- <figure><img src="img/p3-miel.webp" alt="Miel vertida sobre la mezcla"><figcaption>Se agrega la miel</figcaption></figure>
- <figure><img src="img/p4-jamaica.webp" alt="Flor de Jamaica en remojo"><figcaption>Se remoja la Jamaica</figcaption></figure>
- <figure><img src="img/p6-mezcla.webp" alt="Mezcla final de color rosado"><figcaption>Se mezcla todo</figcaption></figure>
- <figure><img src="img/p7-listo.webp" alt="Frasco de exfoliante terminado"><figcaption>Producto listo</figcaption></figure></div>
-</section>
-<section id="costos" class="vista"><h1>Costo de producción</h1><p>Escribe cantidades, precios y características del lote. El resultado cambia al momento.</p>
- <div class="dos"><div>
- <fieldset><legend>Producto</legend><div class="campos" id="fProd"></div></fieldset>
- <fieldset><legend>1. Materia prima directa</legend><div class="desliza"><table id="tMP"></table></div><button data-add="mp">Agregar materia prima</button></fieldset>
- <fieldset><legend>2. Mano de obra directa</legend><div class="desliza"><table id="tMO"></table></div><button data-add="mo">Agregar mano de obra</button></fieldset>
- <fieldset><legend>3. Gastos indirectos de fabricación</legend><div class="desliza"><table id="tGIF"></table></div><button data-add="gif">Agregar gasto indirecto</button></fieldset>
- </div><aside class="res" id="resCosto" aria-live="polite" aria-label="Resultado"></aside></div>
- <p class="acciones"><button id="csv">Descargar hoja de costos (CSV)</button> <button id="imprimir">Imprimir</button> <button id="reset" class="claro">Volver a los datos de ejemplo</button></p>
-</section>
-<section id="precios" class="vista"><h1>Precio de venta</h1><p>El precio parte del costo unitario, más los gastos de operación por pieza y la rentabilidad que elijas.</p>
- <div class="dos"><fieldset><legend>Condiciones</legend><div class="campos" id="fPre"></div></fieldset><aside class="res" id="resPre" aria-live="polite" aria-label="Precios"></aside></div>
- <h2>Comparación con el precio propuesto</h2><div id="compara"></div></section>
-<section id="inventario" class="vista"><h1>Control de inventarios</h1><p>Las compras suman materia prima, la producción la consume y crea frascos, y la venta los descuenta. Se usa costo promedio.</p>
- <div class="tres">
- <form id="fCompra"><fieldset><legend>Registrar compra</legend><label>Materia prima<select name="i"></select></label><label>Cantidad<input name="c" type="number" min="0.01" step="any" required></label><label>Costo total de la compra ($)<input name="t" type="number" min="0" step="any" required></label><button>Guardar compra</button></fieldset></form>
- <form id="fProdu"><fieldset><legend>Registrar producción</legend><label>Número de lotes<input name="n" type="number" min="1" step="1" value="1" required></label><p class="nota" id="notaProd"></p><button>Producir</button></fieldset></form>
- <form id="fVenta"><fieldset><legend>Registrar venta</legend><label>Frascos vendidos<input name="n" type="number" min="1" step="1" value="1" required></label><p class="nota" id="notaVenta"></p><button>Vender</button></fieldset></form></div>
- <p id="aviso" role="status"></p><h2>Existencias</h2><div class="desliza"><table id="tInv"></table></div>
- <h2>Movimientos del producto terminado</h2><div class="desliza"><table id="tKar"></table></div>
- <p class="acciones"><button id="csvInv">Descargar movimientos (CSV)</button> <button id="limpInv" class="claro">Vaciar inventario</button></p></section>
-<section id="prueba" class="vista"><h1>Prueba de uso</h1><p>Sigue las tareas, responde y genera tu comprobante. Los datos se quedan en este dispositivo: no se envían a ningún servidor.</p>
- <form id="fPru"><fieldset><legend>Quién prueba la aplicación</legend><div class="campos"><label>Nombre<input name="nombre" required autocomplete="off"></label><label>Carrera<input name="carrera" value="Ing. Industrial" required></label><label>Semestre y grupo<input name="grupo" autocomplete="off"></label></div></fieldset>
- <fieldset><legend>Tareas</legend><label class="chk"><input type="checkbox" name="t1" required> Cambié un precio o una cantidad en Costos y vi el nuevo costo unitario.</label><label class="chk"><input type="checkbox" name="t2" required> Cambié la rentabilidad en Precios y revisé el precio sin IVA y con IVA.</label><label class="chk"><input type="checkbox" name="t3" required> Registré una compra, una producción y una venta en Inventario.</label></fieldset>
- <fieldset><legend>Opinión</legend><div class="campos"><label>Facilidad de uso (1 a 5)<input name="fac" type="number" min="1" max="5" required></label><label>Claridad de los resultados (1 a 5)<input name="cla" type="number" min="1" max="5" required></label></div><label>Comentario<textarea name="com" rows="3"></textarea></label></fieldset>
- <button>Generar comprobante</button></form><div id="comp"></div></section>
-</main><footer>EVERIA · Proyecto escolar de Costos Empresariales, ITSPR. Los datos se guardan solo en tu navegador.</footer>
-<script src="calc.js"></script><script src="app.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EVERIA · Exfoliante natural</title>
+<meta name="description" content="EVERIA, exfoliante natural elaborado a mano con arroz molido, miel, aceite de coco y té de Jamaica. Naturaleza que inspira tu cuidado.">
+<meta name="theme-color" content="#ece3d3">
+<link rel="icon" href="/everia-costos/sitio/marca/logo.webp">
+<link rel="stylesheet" href="/everia-costos/sitio/estilo.css">
+<script defer src="/everia-costos/sitio/acc.js"></script>
+  <script type="module" src="/everia-costos/boot.js?m=/everia-costos/sitio/index-DSkNP6WZ.js"></script>
+</head>
+<body id="sitio" class="cargando">
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+
+<header class="barra" id="barra">
+  <a class="marca" href="#inicio" aria-label="Inicio">
+    <span class="marca-nombre" data-marca="nombre">EVERIA</span>
+    <span class="marca-sub">Exfoliante natural</span>
+  </a>
+  <nav class="nav" id="nav" aria-label="Secciones">
+    <a href="#origen">Origen</a>
+    <a href="#ingredientes">Ingredientes</a>
+    <a href="#proceso">Proceso</a>
+    <a href="#catalogo">Catálogo</a>
+    <a href="#ritual">Ritual</a>
+    <a href="#menus" data-solo-menus hidden>Menús</a>
+    <a href="#preguntas">Preguntas</a>
+  </nav>
+  <div class="barra-acciones">
+    <button class="btn-pedido" id="abrir-pedido" type="button" aria-haspopup="dialog">
+      <span>Pedido</span><span class="contador" id="contador" aria-live="polite">0</span>
+    </button>
+    <button class="btn-menu" id="btn-menu" type="button" aria-expanded="false" aria-controls="nav" aria-label="Abrir menú">
+      <span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="contenido">
+  <!-- HÉROE: escena 3D fijada mientras se desplaza -->
+  <section class="heroe" id="inicio" aria-labelledby="titulo-heroe">
+    <div class="heroe-fijo">
+      <div class="heroe-fondo" aria-hidden="true"></div>
+      <canvas class="escena" id="escena" aria-hidden="true"></canvas>
+      <figure class="heroe-respaldo" id="heroe-respaldo" hidden>
+        <img src="/everia-costos/sitio/marca/prototipo-frasco.webp" alt="Frasco del exfoliante EVERIA con su etiqueta" width="540" height="710">
+      </figure>
+      <div class="heroe-textos">
+        <div class="fase fase-1 activa">
+          <p class="sobre">Exfoliante natural · hecho a mano</p>
+          <h1 id="titulo-heroe">Naturaleza que <em>inspira</em> tu cuidado.</h1>
+          <p class="entradilla">Arroz molido, miel, aceite de coco y té de Jamaica. Una textura granulada y suave, preparada en pequeños lotes.</p>
+          <div class="acciones">
+            <a class="btn btn-solido" href="#catalogo">Ver el exfoliante</a>
+            <a class="btn btn-linea" href="#ingredientes">Qué contiene</a>
+          </div>
+        </div>
+        <div class="fase fase-2" aria-hidden="true">
+          <p class="sobre">Cinco ingredientes</p>
+          <p class="frase">Lo que da la tierra, <em>sin más</em>.</p>
+          <ul class="chips"><li>Arroz</li><li>Miel</li><li>Coco</li><li>Jamaica</li><li>Jabón corporal</li></ul>
+        </div>
+        <div class="fase fase-3" aria-hidden="true">
+          <p class="sobre">Elaboración artesanal</p>
+          <p class="frase">Su tono rosado viene de la <em>flor de Jamaica</em>.</p>
+        </div>
+      </div>
+      <p class="pista" id="pista" aria-hidden="true"><span></span>Desliza · arrastra el frasco para girarlo</p>
+    </div>
+  </section>
+
+  <!-- ORIGEN -->
+  <section class="origen" id="origen" aria-labelledby="t-origen">
+    <div class="origen-texto">
+      <p class="sobre revelar">01 — Origen</p>
+      <h2 id="t-origen" class="revelar">Exfoliar con lo que <em>ya conoces</em>.</h2>
+      <p class="revelar">EVERIA nació como un exfoliante artesanal hecho con ingredientes naturales y accesibles: arroz que se pulveriza en casa, miel de abeja, aceite de coco extra virgen y una infusión de flor de Jamaica.</p>
+      <p class="revelar">La exfoliación retira las células muertas de la capa más externa de la piel. Nosotros buscamos hacerlo con una fórmula sencilla, que puedas reconocer ingrediente por ingrediente.</p>
+    </div>
+    <figure class="origen-foto revelar" data-paralaje="0.08">
+      <img src="/everia-costos/sitio/marca/prototipo.webp" alt="Prototipo de la presentación de EVERIA: dos frascos con etiqueta crema, arroz, miel, flor de Jamaica y coco" width="1298" height="865" loading="lazy" decoding="async">
+      <figcaption>Prototipo de presentación y etiqueta.</figcaption>
+    </figure>
+    <blockquote class="lema revelar"><span data-marca="lema">Naturaleza que inspira tu cuidado</span></blockquote>
+  </section>
+
+  <!-- INGREDIENTES -->
+  <section class="ingredientes" id="ingredientes" aria-labelledby="t-ingr">
+    <header class="cabecera">
+      <p class="sobre revelar">02 — Ingredientes</p>
+      <h2 id="t-ingr" class="revelar">Cinco ingredientes, <em>un lote a la vez</em>.</h2>
+      <p class="revelar nota">Cantidades por lote, según la receta de elaboración de la marca.</p>
+    </header>
+    <ol class="ingr-lista">
+      <li class="ingr revelar" style="--tono:#efe8da">
+        <span class="ingr-num">i</span><span class="ingr-ico ico-arroz" aria-hidden="true"></span>
+        <h3>Arroz molido</h3><p class="cant">1 taza · 200 g</p>
+        <p>Se muele solo, hasta pulverizarlo. Es la partícula que da la textura granulada del exfoliante.</p>
+      </li>
+      <li class="ingr revelar" style="--tono:#e9e4ec">
+        <span class="ingr-num">ii</span><span class="ingr-ico ico-jabon" aria-hidden="true"></span>
+        <h3>Jabón corporal</h3><p class="cant">30 ml</p>
+        <p>La base que une la mezcla y permite enjuagarla con facilidad.</p>
+      </li>
+      <li class="ingr revelar" style="--tono:#f2e5c8">
+        <span class="ingr-num">iii</span><span class="ingr-ico ico-miel" aria-hidden="true"></span>
+        <h3>Miel de abeja</h3><p class="cant">10 g</p>
+        <p>Se incorpora a la mezcla de arroz y jabón, que la absorbe mientras reposa.</p>
+      </li>
+      <li class="ingr revelar" style="--tono:#eef0e6">
+        <span class="ingr-num">iv</span><span class="ingr-ico ico-coco" aria-hidden="true"></span>
+        <h3>Aceite de coco</h3><p class="cant">10 ml · extra virgen</p>
+        <p>Aporta deslizamiento al masajear, para que las partículas no rasquen.</p>
+      </li>
+      <li class="ingr revelar" style="--tono:#f1dde3">
+        <span class="ingr-num">v</span><span class="ingr-ico ico-jamaica" aria-hidden="true"></span>
+        <h3>Té de Jamaica</h3><p class="cant">1.2 g de flor</p>
+        <p>La flor se remoja y se cuela; solo el té se añade. De ahí viene el color rosado.</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- PROCESO (desplazamiento horizontal) -->
+  <section class="proceso" id="proceso" aria-labelledby="t-proc">
+    <div class="proceso-fijo">
+      <header class="cabecera">
+        <p class="sobre">03 — Proceso</p>
+        <h2 id="t-proc">Así se prepara, <em>frasco por frasco</em>.</h2>
+        <p class="nota">Fotografías reales de la elaboración.</p>
+      </header>
+      <div class="pista-h" id="pista-h" tabindex="0" aria-label="Pasos de elaboración (desplazable)">
+        <ol class="pasos-h" id="pasos-h">
+          <li><figure><img src="/everia-costos/sitio/marca/p1-ingredientes.webp" alt="Ingredientes sobre la mesa: arroz, flor de Jamaica, jabón, miel, aceite de coco y frasco" loading="lazy" decoding="async" width="473" height="677"></figure><span>01</span><p>Reunir y pesar los ingredientes.</p></li>
+          <li><figure><img src="/everia-costos/sitio/marca/p2-molienda.webp" alt="Arroz pulverizado en la licuadora" loading="lazy" decoding="async" width="600" height="800"></figure><span>02</span><p>Moler la taza de arroz, sola, hasta pulverizarla.</p></li>
+          <li><figure><img src="/everia-costos/sitio/marca/p3-miel.webp" alt="Miel vertida sobre la mezcla de arroz y jabón" loading="lazy" decoding="async" width="650" height="867"></figure><span>03</span><p>Mezclar con el jabón y añadir la miel.</p></li>
+          <li><figure><img src="/everia-costos/sitio/marca/p4-jamaica.webp" alt="Flor de Jamaica remojándose" loading="lazy" decoding="async" width="650" height="867"></figure><span>04</span><p>Remojar la flor de Jamaica para obtener su color.</p></li>
+          <li><figure><img src="/everia-costos/sitio/marca/p5-infusion.webp" alt="Cucharada de té de Jamaica junto a la mezcla" loading="lazy" decoding="async" width="720" height="540"></figure><span>05</span><p>Colar la pulpa y añadir solo el té.</p></li>
+          <li><figure><img src="/everia-costos/sitio/marca/p6-mezcla.webp" alt="Mezcla terminada de tono rosado" loading="lazy" decoding="async" width="650" height="867"></figure><span>06</span><p>Revolver hasta lograr el tono rosado.</p></li>
+          <li><figure><img src="/everia-costos/sitio/marca/p7-listo.webp" alt="Frasco con el exfoliante terminado" loading="lazy" decoding="async" width="488" height="867"></figure><span>07</span><p>Envasar. Listo para usar.</p></li>
+        </ol>
+      </div>
+      <div class="progreso-h" aria-hidden="true"><span id="barra-h"></span></div>
+    </div>
+  </section>
+
+  <!-- CATÁLOGO (datos del sistema) -->
+  <section class="catalogo" id="catalogo" aria-labelledby="t-cat">
+    <header class="cabecera">
+      <p class="sobre revelar">04 — Catálogo</p>
+      <h2 id="t-cat" class="revelar">Para llevar a <em>casa</em>.</h2>
+    </header>
+    <div class="cat-controles" id="cat-controles" hidden>
+      <label class="buscar"><span class="vh">Buscar productos</span>
+        <input type="search" id="buscar" placeholder="Buscar por nombre o ingrediente" autocomplete="off" maxlength="60">
+      </label>
+      <div class="filtros" id="filtros" role="group" aria-label="Categorías"></div>
+    </div>
+    <div class="cat-estado" id="cat-estado" role="status" aria-live="polite">
+      <div class="esqueleto"></div><div class="esqueleto"></div><div class="esqueleto"></div>
+    </div>
+    <div class="cat-rejilla" id="cat-rejilla"></div>
+  </section>
+
+  <!-- RITUAL -->
+  <section class="ritual" id="ritual" aria-labelledby="t-rit">
+    <header class="cabecera">
+      <p class="sobre revelar">05 — Ritual</p>
+      <h2 id="t-rit" class="revelar">Seis pasos, <em>sin prisa</em>.</h2>
+    </header>
+    <ol class="ritual-pasos">
+      <li class="revelar"><span>1</span><h3>Limpia</h3><p>Lava la zona con tu jabón habitual y abundante agua tibia.</p></li>
+      <li class="revelar"><span>2</span><h3>Humedece</h3><p>Mantén la piel húmeda. Nunca lo apliques sobre la piel seca.</p></li>
+      <li class="revelar"><span>3</span><h3>Dosifica</h3><p>Toma una porción pequeña con la yema de los dedos o una espátula limpia.</p></li>
+      <li class="revelar"><span>4</span><h3>Masajea</h3><p>Movimientos circulares muy suaves, sin presionar. Máximo 30 segundos por zona.</p></li>
+      <li class="revelar"><span>5</span><h3>Enjuaga</h3><p>Con abundante agua tibia, sin dejar partículas en los pliegues.</p></li>
+      <li class="revelar"><span>6</span><h3>Hidrata</h3><p>Seca con toques suaves y aplica de inmediato tu crema hidratante.</p></li>
+    </ol>
+    <aside class="precauciones revelar" aria-labelledby="t-prec">
+      <h3 id="t-prec">Precauciones</h3>
+      <p>Consérvalo en un lugar fresco y seco, fuera del alcance de los niños. Evita el contacto con los ojos. Suspende su uso si aparece irritación. Es un cosmético: no sustituye ningún tratamiento médico.</p>
+    </aside>
+  </section>
+
+  <!-- MENÚS (publicados desde MenuCraft; la sección aparece sola cuando hay alguno) -->
+  <section class="menus" id="menus" aria-labelledby="t-menus" hidden>
+    <header class="cabecera">
+      <p class="sobre revelar">06 — Menús</p>
+      <h2 id="t-menus" class="revelar">Nuestros <em>menús</em> interactivos.</h2>
+      <p class="nota revelar">Toca cualquier producto marcado para ver su detalle.</p>
+    </header>
+    <div class="menus-rejilla" id="menus-rejilla"></div>
+  </section>
+
+  <!-- PREGUNTAS -->
+  <section class="preguntas" id="preguntas" aria-labelledby="t-faq">
+    <header class="cabecera">
+      <p class="sobre revelar">07 — Preguntas</p>
+      <h2 id="t-faq" class="revelar">Antes de <em>empezar</em>.</h2>
+    </header>
+    <div class="faq">
+      <details class="revelar"><summary>¿Cada cuánto lo uso?</summary><p>Como guía general, una o dos veces por semana. Si tu piel es sensible, espacia más las aplicaciones; si notas enrojecimiento o ardor, suspende su uso.</p></details>
+      <details class="revelar"><summary>¿Puedo usarlo en el rostro?</summary><p>Sí, con una porción muy pequeña y movimientos muy suaves. Evita el contorno de ojos, los labios y la piel irritada o con heridas.</p></details>
+      <details class="revelar"><summary>¿Por qué es de color rosado?</summary><p>Por el té de flor de Jamaica que se añade a la mezcla. No lleva colorantes añadidos.</p></details>
+      <details class="revelar"><summary>¿Cómo lo conservo?</summary><p>Bien cerrado, en un lugar fresco y seco, y fuera del alcance de los niños. Usa siempre los dedos secos o una espátula limpia para no introducir agua en el frasco.</p></details>
+      <details class="revelar"><summary>¿Cómo hago un pedido?</summary><p>Agrega productos a tu pedido y pulsa «Preparar pedido». Obtendrás un resumen con un folio para enviarlo o mostrarlo al vendedor. Este sitio no cobra en línea: el pago se acuerda directamente con la marca.</p></details>
+      <details class="revelar"><summary>¿Lo puedo usar sobre la piel seca?</summary><p>No. Aplícalo siempre sobre la piel húmeda: en seco, las partículas pueden irritar o causar pequeñas lesiones.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer class="pie" id="pie">
+  <div class="pie-marca">
+    <img src="/everia-costos/sitio/marca/logo.webp" alt="Logotipo de EVERIA" width="180" height="180" loading="lazy" decoding="async" data-marca="logo">
+  </div>
+  <div class="pie-col">
+    <h2>Contacto</h2>
+    <ul id="contacto" class="lista-limpia"><li class="tenue">Los datos de contacto se configuran en el panel.</li></ul>
+  </div>
+  <div class="pie-col">
+    <h2>Explora</h2>
+    <ul class="lista-limpia">
+      <li><a href="#catalogo">Catálogo</a></li><li><a href="#ritual">Modo de uso</a></li><li><a href="#ingredientes">Ingredientes</a></li><li><a href="#preguntas">Preguntas frecuentes</a></li>
+    </ul>
+  </div>
+  <div class="pie-col">
+    <h2>Síguenos</h2>
+    <ul id="redes" class="lista-limpia"><li class="tenue">—</li></ul>
+  </div>
+  <p class="pie-legal">© <span id="anio">2026</span> <span data-marca="nombre">EVERIA</span>. Producto cosmético de elaboración artesanal; no es un medicamento. Precios en pesos mexicanos (MXN), con IVA incluido. El sitio no procesa pagos en línea. <a href="/everia-costos/admin/">Panel de costos e inventario</a></p>
+</footer>
+
+<!-- Detalle de producto -->
+<dialog class="hoja" id="detalle" aria-labelledby="detalle-titulo">
+  <div class="hoja-cuerpo" id="detalle-cuerpo"></div>
+</dialog>
+
+<!-- Pedido -->
+<dialog class="cajon" id="pedido" aria-labelledby="pedido-titulo">
+  <div class="cajon-cuerpo" id="pedido-cuerpo"></div>
+</dialog>
+
+<!-- Visor de menús -->
+<dialog class="visor" id="visor" aria-labelledby="visor-titulo">
+  <div class="visor-cuerpo" id="visor-cuerpo"></div>
+</dialog>
+
+<div class="aviso" id="aviso" role="status" aria-live="polite"></div>
+<noscript><p class="sin-js">Activa JavaScript para ver el catálogo y los menús. El resto del contenido está disponible.</p></noscript>
+</body>
+</html>
